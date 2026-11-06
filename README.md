@@ -13,7 +13,7 @@ You can install the development version of robustsens like so:
 
 ``` r
 # run from the folder containing file.
-install.packages("robustsens_0.1.0.tar.gz", repos = NULL, type = "source")
+remotes::install_github("iCampapp/robustsens")
 ```
 
 ## Example
