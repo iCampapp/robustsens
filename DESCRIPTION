@@ -19,3 +19,5 @@ VignetteBuilder: knitr
 Imports: 
     graphics,
     stats
+URL: https://github.com/iCampapp/robustsens
+BugReports: https://github.com/iCampapp/robustsens/issues
