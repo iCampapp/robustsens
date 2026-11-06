@@ -1,0 +1,88 @@
+---
+title: "Robust estimation of SpO2 with robustsens"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Robust estimation of SpO2 with robustsens}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5
+)
+library(robustsens)
+```
+
+## The problem
+
+A pulse oximeter measures oxygen saturation (SpO2) about once per second. When the patient moves, some readings are corrupted and display absurd values. The monitor summarizes recent readings into one number and raises an alarm if it falls below a threshold. **Which estimator should it use, so that corrupted readings do not trigger false alarms?**
+
+## Healthy signal and artifacts
+
+```{r signal}
+set.seed(1)
+x <- simulate_spo2(100)        # healthy patient
+y <- contaminate(x, proportion = 0.05)    # 5% of readings corrupted (value 60)
+c(mean = mean(y), median = median(y), huber = huber_loc(y))
+```
+
+## Influence of one corrupted reading
+
+The influence of a single measurement at $x$ on an estimator $T$ is the Gateaux derivative of $T$ at $F$ in the direction of a point mass:
+
+$$IF(x) = \lim_{t \to 0} \frac{T\big((1-t)F + t\,\delta_x\big) - T(F)}{t}$$
+
+On a sample, it is approximated by the sensitivity curve:
+
+$$SC_n(x) = n\,\Big[T_n(x_1,\dots,x_{n-1},x) - T_{n-1}(x_1,\dots,x_{n-1})\Big]$$
+
+```{r sensitivity}
+plot_sensitivity(x, main = "Influence of one extra measurement")
+```
+ 
+The influence of the mean is unbounded: $IF(x) = x - \mu$. The robust estimators are bounded, but this is hard to see at this scale, so we zoom in.
+
+```{r zoom}
+plot_sensitivity(
+  x,
+  estimators = list(median = stats::median,
+                    trimmed_mean = trimmed_mean,
+                    huber = huber_loc),
+  ylim = c(-6, 6),
+  main = "Zoom: robust estimators only"
+)
+```
+
+## Bias under growing contamination
+
+```{r bias}
+res <- compare_estimators()
+plot_bias(res)
+```
+
+The bias of the mean grows linearly with the share of artifacts $t$:
+
+$$\text{bias} \approx t\,(60 - 97)$$
+
+The trimmed mean (10% per side) stays accurate until the contamination approaches its trimming level, then breaks down. The median and Huber remain stable over the whole range.
+
+## Consequence fo alarms
+
+```{r alarms}
+threshold <- 92
+set.seed(2)
+y20 <- contaminate(simulate_spo2(100), proportion = 0.2)
+est <- c(mean = mean(y20), median = median(y20),
+         trimmed_mean = trimmed_mean(y20), huber = huber_loc(y20))
+data.frame(estimate = round(est, 1), alarm = est < threshold)
+```
+
+The patient is healthy (true SpO2 = 97), yet an estimator can still trigger an alarm if it pulled below the threshold by the artifacts.
+
+## Conclusion
+
+Robustness has a cost: a very robust estimator reacts less to real changes. The sensitivity curve makes this trade-off visible, and `robustsens` accepts any estimator function, so the same tools apply to other sensors.
