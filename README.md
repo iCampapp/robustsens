@@ -12,7 +12,7 @@ sensitivity curve. Its case study is the SpO2 signal of a pulse oximeter.
 You can install the development version of robustsens like so:
 
 ``` r
-pak::pak("iCampapp/robustsens")
+remotes::install_github("iCampapp/robustsens")
 ```
 
 ## Example
