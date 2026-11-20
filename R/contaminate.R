@@ -6,11 +6,11 @@
 #' @param x Numric vector of measurements.
 #' @param proportion Share of measurements to corrupt, between 0 and 1.
 #' @param value Value taken by the corrupted measurements.
-#' @return A numeric vector of the same lenght as x.
+#' @return A numeric vector of the same length as x.
 #' @export
 
 #contaminate() prend le vecteur de valeurs vraies x, le contamine suivant une proportion,
-#donc proportion*length(x) sont contaminees, el les valeurs contaminees = 60.
+#donc proportion*length(x) sont contaminees, et les valeurs contaminees = 60.
 #sample() choisit ensuite au hasard les indices (dans x) qui prendront ces valeurs
 
 contaminate <- function(x, proportion, value = 60) {

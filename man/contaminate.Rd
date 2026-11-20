@@ -14,7 +14,7 @@ contaminate(x, proportion, value = 60)
 \item{value}{Value taken by the corrupted measurements.}
 }
 \value{
-A numeric vector of the same lenght as x.
+A numeric vector of the same length as x.
 }
 \description{
 Replaces a random proportion of measurements by a fixed outlier value, as when motion

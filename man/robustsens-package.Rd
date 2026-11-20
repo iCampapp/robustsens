@@ -8,6 +8,14 @@
 \description{
 Tools to measure how outliers affect estimators of a sensor signal, using the empirical sensitivity curve (a Gateaux derivative of the estimator) and simulations. Applied to SpO2 measurements from a pulse oximeter.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/iCampapp/robustsens}
+  \item Report bugs at \url{https://github.com/iCampapp/robustsens/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Elsa Awoutsa \email{awoutsaelsa@gmail.com}
 

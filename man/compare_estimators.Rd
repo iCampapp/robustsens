@@ -32,5 +32,5 @@ A data frame with columns \code{proportion}, \code{estimator}, \code{bias}.
 }
 \description{
 For each proportion of artifacts, simulates many contaminated signals
-and measures how far each estimatoris, on average, from the true value.
+and measures how far each estimator, on average, from the true value.
 }
